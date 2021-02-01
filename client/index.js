@@ -383,7 +383,8 @@ const COTELE_PARIS = [
 // // 1. Log if we have new products only (true or false)
 // // A new product is a product `released` less than 2 weeks.
 let now = new Date().now;
-let two_weeks = now - 14;
+let two_weeks = new Date();
+two_weeks.setDate(now.getDate() - 14);
 let new_prod = false;
 for (let d in COTELE_PARIS){
   if (d.realeased > two_weeks){
