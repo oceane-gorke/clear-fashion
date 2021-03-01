@@ -1,15 +1,18 @@
 /* eslint-disable no-console, no-process-exit */
 const dedicatedbrand = require('./sources/dedicatedbrand');
 const adresseparis = require('./sources/adresseparis');
-const mudjeans = require('')
+const mudjeans = require('./sources/mudjeans')
+const fs = require('fs');
 
-async function sandbox (eshop = 'https://www.dedicatedbrand.com/en/men/news') {
+async function sandbox_dedicated (eshop = 'https://www.dedicatedbrand.com/en/men/news') {
   try {
-    console.log(`🕵️‍♀️  browsing ${eshop} source`);
+    //console.log(`🕵️‍♀️  browsing ${eshop} source`);
 
-    //const products = await dedicatedbrand.scrape(eshop);
-    const products = await adresseparis.scrape(eshop);
+    const products = await dedicatedbrand.scrape(eshop);
     console.log(products);
+
+    let datascraped = JSON.stringify(products);
+    fs.writeFileSync('dedicated_products.json', datascraped);
     console.log('done');
     process.exit(0);
   } catch (e) {
@@ -18,9 +21,53 @@ async function sandbox (eshop = 'https://www.dedicatedbrand.com/en/men/news') {
   }
 }
 
+//sandbox_dedicated(eshop);
+
+async function sandbox_adresse () {
+
+  let eshop = 'https://adresse.paris/602-nouveautes';
+  try {
+    //console.log(`🕵️‍♀️  browsing ${eshop} source`);
+
+    const products = await adresseparis.scrape(eshop);
+    console.log(products);
+
+    let datascraped = JSON.stringify(products);
+    fs.writeFileSync('adresseparis_products.json', datascraped);
+    console.log('done');
+    process.exit(0);
+  } catch (e) {
+    console.error(e);
+    process.exit(1);
+  }
+}
+
+sandbox_adresse();
+
+async function sandbox_mudjeans () {
+  let eshop= "https://mudjeans.eu/collections/skinny";
+  try {
+    //console.log(`🕵️‍♀️  browsing ${eshop} source`);
+
+    const products = await mudjeans.scrape(eshop);
+    console.log(products);
+
+    let datascraped = JSON.stringify(products);
+    fs.writeFileSync('mudjeans_products.json', datascraped);
+    console.log('done');
+    process.exit(0);
+  } catch (e) {
+    console.error(e);
+    process.exit(1);
+  }
+}
+
+//sandbox_mudjeans();
+
 const [,, eshop] = process.argv;
 
-sandbox(eshop);
+
+
 
 //in the terminal do : 
 //node sandbox.js -> log the products from eshop defined above 
