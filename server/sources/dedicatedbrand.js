@@ -44,3 +44,81 @@ module.exports.scrape = async url => {
 
   return null;
 };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/**
+ * Parse webpage e-shop
+ * @param  {String} data - html response
+ * @return {Array} products
+ */
+/*
+function parseHomepage (data){
+  const $ = cheerio.load(data);
+
+  return $('.mainNavigation-link-subMenu-link')
+    .map((i, element) => {
+      const href = $(element).find('a').attr('href');
+      return `${DEDICATED_BRAND}${href}`;
+    })
+    .get();
+};
+*/
+/**
+ * Get all the products pages
+ * @param {String} url 
+ * @return {Array}
+ */
+/*
+module.exports.getPages = async (url = DEDICATED_BRAND) => {
+  const response = await axios(url);
+  const {data, status} = response;
+
+  if (status >= 200 && status < 300){
+    return parseHomepage(data);
+  }
+
+  console.error(status);
+  
+  return [];
+
+};
+
+*/
+/**
+ * Scrape all the products for a given url page
+ * @param  {[type]}  url
+ * @return {Array|null}
+ */
+/*
+module.exports.scrape = async url => {
+  const response = await axios(url);
+  const {data, status} = response;
+
+  if (status >= 200 && status < 300) {
+    return parse(data);
+  }
+
+  console.error(status);
+
+  return null;
+};
+*/
