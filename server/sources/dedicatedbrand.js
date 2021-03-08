@@ -32,7 +32,7 @@ const parse = data => {
         'photo': $(element)
           .find('.productList-image img')
           .attr('src'),
-        '_id': uuidv5(link, uuidv5.URL)
+        'uuid': uuidv5(link, uuidv5.URL)
       };
     })
     .get();
