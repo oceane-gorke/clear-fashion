@@ -4,7 +4,8 @@ const adresseparis = require('./sources/adresseparis');
 const mudjeans = require('./sources/mudjeans')
 const fs = require('fs');
 
-async function sandbox_dedicated (eshop = 'https://www.dedicatedbrand.com/en/men/news') {
+async function sandbox_dedicated () {
+  let eshop = 'https://www.dedicatedbrand.com/en/men/news';
   try {
     //console.log(`🕵️‍♀️  browsing ${eshop} source`);
 
@@ -12,7 +13,7 @@ async function sandbox_dedicated (eshop = 'https://www.dedicatedbrand.com/en/men
     console.log(products);
 
     let datascraped = JSON.stringify(products);
-    fs.writeFileSync('dedicated_products.json', datascraped);
+    fs.writeFileSync('database/dedicated_products.json', datascraped);
     console.log('done');
     process.exit(0);
   } catch (e) {
@@ -21,7 +22,7 @@ async function sandbox_dedicated (eshop = 'https://www.dedicatedbrand.com/en/men
   }
 }
 
-//sandbox_dedicated(eshop);
+sandbox_dedicated();
 
 async function sandbox_adresse () {
 
@@ -33,7 +34,7 @@ async function sandbox_adresse () {
     console.log(products);
 
     let datascraped = JSON.stringify(products);
-    fs.writeFileSync('adresseparis_products.json', datascraped);
+    fs.writeFileSync('database/adresseparis_products.json', datascraped);
     console.log('done');
     process.exit(0);
   } catch (e) {
@@ -42,7 +43,7 @@ async function sandbox_adresse () {
   }
 }
 
-sandbox_adresse();
+//sandbox_adresse();
 
 async function sandbox_mudjeans () {
   let eshop= "https://mudjeans.eu/collections/skinny";
@@ -53,7 +54,7 @@ async function sandbox_mudjeans () {
     console.log(products);
 
     let datascraped = JSON.stringify(products);
-    fs.writeFileSync('mudjeans_products.json', datascraped);
+    fs.writeFileSync('database/mudjeans_products.json', datascraped);
     console.log('done');
     process.exit(0);
   } catch (e) {

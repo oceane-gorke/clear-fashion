@@ -1,24 +1,79 @@
+require('dotenv').config();
+const fs = require('fs');
+//const user = process.env.user;
 const user = process.env.user;
 const password = process.env.password;
 
-const cluster_url = "https://cloud.mongodb.com/v2/603d17a388becd74172c876e#metrics/host/5d05194ddfdf5ea83bf83e5dd1569af7/status"
+const cluster_url = "webappclearfashiongo.e3xyn.mongodb.net";
 
 var MongoClient = require('mongodb');
-const MONGODB_URI = `mongodb+srv://${user}:${password}@${cluster_url}?retryWrites=true&writeConcern=majority`;
+const MONGODB_URI = `mongodb+srv://${user}:${password}@${cluster_url}/myFirstDatabase?retryWrites=true&w=majority`;
+console.log("MONGO", MONGODB_URI);
 const MONGODB_DB_NAME = 'WebAppClearFashionGO';
 
-async function run(){
+
+//only the dedicated products are stored for now
+//do verification the product is not yet in the database
+async function insert (mongodb_uri, mongodb_db_name){
+    //connection
+    const client = await MongoClient.connect(mongodb_uri, {'useNewUrlParser': true});
+    const db =  client.db(mongodb_db_name);
+    const collection = db.collection('products');
+
+    //insert 
+    return fs.readFile("database/dedicated_products.json", (error,jsonString)=>{
+        if (error){
+            console.log("Error");
+            return 
+        }
+            const products=JSON.parse(jsonString);
+            collection.insertMany(products)
+            .then(
+                res => console.log(`${res.result.n} products inserted`),
+                error => console.error(error)
+            );
+            client.close();
+    });    
+}
+
+async function whichBrand (brand) {
     const client = await MongoClient.connect(MONGODB_URI, {'useNewUrlParser': true});
     const db =  client.db(MONGODB_DB_NAME);
-    const products = [];
     const collection = db.collection('products');
-    const result = collection.insertMany(products);
 
-    console.log(result);
+    const products = await collection.find({brand}).toArray();
+    await client.close();
+
+    console.log(products);
+    return products;
 }
-run();
+
+async function lessThan (price_wanted) {
+    const client = await MongoClient.connect(MONGODB_URI, {'useNewUrlParser': true});
+    const db =  client.db(MONGODB_DB_NAME);
+    const collection = db.collection('products');
+
+    const products = await collection.find({price : {$lt : price_wanted}}).toArray();
+    await client.close();
+
+    console.log(products);
+    return products;
+}
+
+async function sortedByPrice () {
+    const client = await MongoClient.connect(MONGODB_URI, {'useNewUrlParser': true});
+    const db =  client.db(MONGODB_DB_NAME);
+    const collection = db.collection('products');
+
+    const products = await collection.find({}).sort({price:1}).toArray();
+    await client.close();
+
+    console.log(products);
+    return products;
+}
 
 
 
-
-
+//insert(MONGODB_URI, MONGODB_DB_NAME);
+//lessThan(50);
+//sortedByPrice();
