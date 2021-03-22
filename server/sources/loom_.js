@@ -7,36 +7,39 @@ const {'v5': uuidv5} = require('uuid');
  * @param  {String} data - html response
  * @return {Array} products
  */
+
 const parse = data => {
   const $ = cheerio.load(data);
 
-  return $('.productList-container .productList')
+  return $('.site-nav')
     .map((i, element) => {
-      const link = `https://www.dedicatedbrand.com${$(element)
-        .find('.productList-link')
+      const link = `https://www.loom.fr/collections/${$(element)
+        .find('.product-title')
         .attr('href')}`;
 
-      return {
-        link,
-        'brand': 'dedicated',
-        'price': parseInt(
-          $(element)
-            .find('.productList-price')
+        return{
+          link,
+          'brand' : 'dedicated',
+          'price' : parseInt(
+            $(element)
+              .find('.price .money')
+              .text()
+            //  .replace("€","")
+          ),
+          'name' : $(element)
+            .find('.product-title')
             .text()
-        ),
-        'name': $(element)
-          .find('.productList-title')
-          .text()
-          .trim()
-          .replace(/\s/g, ' '),
-        'photo': $(element)
-          .find('.productList-image img')
-          .attr('src'),
-        '_id': uuidv5(link, uuidv5.URL)
-      };
+            .trim(),
+          'photo': $(element)
+            .find('.product-grid-image .product_card__image-wrapper img')
+            .attr('src'),
+          '_id': uuidv5(link, uuidv5.URL)
+
+        };
     })
     .get();
 };
+
 
 /**
  * Scrape all the products for a given url page
@@ -55,4 +58,3 @@ module.exports.scrape = async url => {
 
   return null;
 };
-

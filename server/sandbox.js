@@ -1,7 +1,7 @@
 /* eslint-disable no-console, no-process-exit */
 const dedicatedbrand = require('./sources/dedicatedbrand');
 const adresseparis = require('./sources/adresseparis');
-const mudjeans = require('./sources/mudjeans')
+const mudjeans = require('./sources/loom')
 const fs = require('fs');
 
 async function sandbox_dedicated () {
@@ -22,19 +22,20 @@ async function sandbox_dedicated () {
   }
 }
 
-sandbox_dedicated();
+//const [,, eshop] = process.argv;
+//sandbox_dedicated();
 
 async function sandbox_adresse () {
 
-  let eshop = 'https://adresse.paris/602-nouveautes';
+  let eshop2 = 'https://adresse.paris/602-nouveautes';
   try {
     //console.log(`🕵️‍♀️  browsing ${eshop} source`);
 
-    const products = await adresseparis.scrape(eshop);
+    const products = await adresseparis.scrape(eshop2);
     console.log(products);
 
-    let datascraped = JSON.stringify(products);
-    fs.writeFileSync('database/adresseparis_products.json', datascraped);
+    //let datascraped = JSON.stringify(products);
+    //fs.writeFileSync('database/adresseparis_products.json', datascraped);
     console.log('done');
     process.exit(0);
   } catch (e) {
@@ -43,10 +44,10 @@ async function sandbox_adresse () {
   }
 }
 
-//sandbox_adresse();
+sandbox_adresse();
 
-async function sandbox_mudjeans () {
-  let eshop= "https://mudjeans.eu/collections/skinny";
+async function sandbox_loom () {
+  let eshop= "https://www.loom.fr/collections/accessoires";
   try {
     //console.log(`🕵️‍♀️  browsing ${eshop} source`);
 
@@ -63,9 +64,9 @@ async function sandbox_mudjeans () {
   }
 }
 
-//sandbox_mudjeans();
+//sandbox_loom();
 
-const [,, eshop] = process.argv;
+//const [,, eshop] = process.argv;
 
 
 

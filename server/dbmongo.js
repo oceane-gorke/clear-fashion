@@ -1,8 +1,8 @@
 require('dotenv').config();
 const fs = require('fs');
-//const user = process.env.user;
-const user = process.env.user;
-const password = process.env.password;
+const path  =  require('path');
+const user = process.env.MONGOUSER;
+const password = process.env.MONGOPASSWORD;
 
 const cluster_url = "webappclearfashiongo.e3xyn.mongodb.net";
 
@@ -21,8 +21,10 @@ async function insert (mongodb_uri, mongodb_db_name){
     const collection = db.collection('products');
 
     //insert 
-    return fs.readFile("database/dedicated_products.json", (error,jsonString)=>{
+    //JSON.parse(fs.readFileSync(path.join(process.cwd(), SHOPIFY_FILE)))
+    return fs.readFileSync(path.join(process.cwd(), "./server/database/mudjeans_products.json"), (error,jsonString)=>{
         if (error){
+            console.log(error);
             console.log("Error");
             return 
         }
@@ -74,6 +76,7 @@ async function sortedByPrice () {
 
 
 
-//insert(MONGODB_URI, MONGODB_DB_NAME);
+insert(MONGODB_URI, MONGODB_DB_NAME);
 //lessThan(50);
 //sortedByPrice();
+

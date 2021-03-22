@@ -1,7 +1,19 @@
+//connection
+const user = process.env.MONGOUSER;
+const password = process.env.MONGOPASSWORD;
+const cluster_url = "webappclearfashiongo.e3xyn.mongodb.net";
+var MongoClient = require('mongodb');
+const MONGODB_URI = `mongodb+srv://${user}:${password}@${cluster_url}/myFirstDatabase?retryWrites=true&w=majority`;
+console.log("MONGO", MONGODB_URI);
+const MONGODB_DB_NAME = 'WebAppClearFashionGO';
+
+
 /* eslint-disable no-console, no-process-exit */
-const dedicatedbrand = require('./sites/dedicatedbrand');
-const loom = require('./sites/loom');
+const dedicatedbrand = require('./sources/dedicatedbrand');
+const loom = require('./sources/loom');
+const adresse = require('./sources/adresseparis')
 const db = require('./db');
+const { constants } = require('fs');
 
 async function sandbox () {
   try {
@@ -50,7 +62,7 @@ async function sandbox () {
     console.log(`👕 ${products.length} total of products found`);
 
     console.log('\n');
-
+    
     const result = await db.insert(products);
 
     console.log(`💽  ${result.insertedCount} inserted products`);
@@ -63,6 +75,9 @@ async function sandbox () {
 
     console.log(`👕 ${loomOnly.length} total of products found for Loom`);
     console.log(loomOnly);
+
+    //let datascraped = JSON.stringify(products);
+    //fs.writeFileSync('database/dedicated_products.json', datascraped);
 
     db.close();
   } catch (e) {

@@ -56,9 +56,6 @@ const fetchProducts = async (page = 1, size = 12) => {
   }
 };
 
-
-
-
 /**
  * Render list of products
  * @param  {Array} products
@@ -166,6 +163,9 @@ selectPage.addEventListener('change',event => {
 
 selectBrand.addEventListener('change', event => {
   sortbrand(currentProducts, event.target.value)
+  .then(setCurrentProducts)
+  .then(renderBrand())
+  .then(() => render(currentProducts, currentPagination))
 })
 
 
@@ -223,6 +223,7 @@ const sortbrand = (products, brand) => {
   renderProducts(sort_product);
 }
 
+
 const ListBrand = products => {
   const name_brand = [];
   for (var i =0; i<products.length; i++)
@@ -247,6 +248,7 @@ const renderBrand = brand => {
 * Feature 3:
 Filter by recent products
 */
+//Math.trunc((Date.now() - Date.parse(x.released)) / (1000 * 3600 * 24)) < 2*7
 
 Date.prototype.minusDays = function(days) { 
   //this.setDate(this.getDate() - parseInt(days));
@@ -256,14 +258,15 @@ Date.prototype.minusDays = function(days) {
 
 const sortRecent = products => {
   //let produceDate = new Date(products.released);
-  let currentTime = new Date();
-  var twoWeeksAgo = currentTime.minusDays(15);
+  let currentTime = Date.now();
+  //var twoWeeksAgo = currentTime.minusDays(15);
   const sort_product = [];
 
   for (var i=0; i<products.length;i++)
   {
-    let d = new Date(products[i].released)
-    if (d > twoWeeksAgo) {
+    let d = new Date.parse(products[i].released);
+    let time = (currentTime - d) / (1000*3600*24);
+    if (time > 2*7) {
       sort_product.push(products[i]);
     }
   }
