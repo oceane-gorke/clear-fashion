@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 //connection
 const user = process.env.MONGOUSER;
 const password = process.env.MONGOPASSWORD;
@@ -14,6 +15,12 @@ const loom = require('./sources/loom');
 const adresse = require('./sources/adresseparis')
 const db = require('./db');
 const { constants } = require('fs');
+=======
+/* eslint-disable no-console, no-process-exit */
+const dedicatedbrand = require('./sites/dedicatedbrand');
+const loom = require('./sites/loom');
+const db = require('./db');
+>>>>>>> f66195154ab69ddaba07392c2dc18dbae9549f74
 
 async function sandbox () {
   try {
@@ -62,7 +69,11 @@ async function sandbox () {
     console.log(`👕 ${products.length} total of products found`);
 
     console.log('\n');
+<<<<<<< HEAD
     
+=======
+
+>>>>>>> f66195154ab69ddaba07392c2dc18dbae9549f74
     const result = await db.insert(products);
 
     console.log(`💽  ${result.insertedCount} inserted products`);
@@ -76,9 +87,12 @@ async function sandbox () {
     console.log(`👕 ${loomOnly.length} total of products found for Loom`);
     console.log(loomOnly);
 
+<<<<<<< HEAD
     //let datascraped = JSON.stringify(products);
     //fs.writeFileSync('database/dedicated_products.json', datascraped);
 
+=======
+>>>>>>> f66195154ab69ddaba07392c2dc18dbae9549f74
     db.close();
   } catch (e) {
     console.error(e);

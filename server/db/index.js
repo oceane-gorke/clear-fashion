@@ -2,6 +2,7 @@ require('dotenv').config();
 const {MongoClient} = require('mongodb');
 const fs = require('fs');
 
+<<<<<<< HEAD
 const user = process.env.MONGOUSER;
 const password = process.env.MONGOPASSWORD;
 const cluster_url = "webappclearfashiongo.e3xyn.mongodb.net";
@@ -10,6 +11,11 @@ const MONGODB_URI = `mongodb+srv://${user}:${password}@${cluster_url}/myFirstDat
 console.log("MONGO", MONGODB_URI);
 const MONGODB_DB_NAME = 'WebAppClearFashionGO';
 const MONGODB_COLLECTION = 'products';
+=======
+const MONGODB_DB_NAME = 'clearfashion';
+const MONGODB_COLLECTION = 'products';
+const MONGODB_URI = process.env.MONGODB_URI;
+>>>>>>> f66195154ab69ddaba07392c2dc18dbae9549f74
 
 let client = null;
 let database = null;
