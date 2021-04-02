@@ -1,6 +1,6 @@
 "use strict";
 
-const marketplace = [
+export const marketplace = [
   {
     brand: "adresse",
     link:
@@ -1086,3 +1086,4 @@ const marketplace = [
     date: "2020-08-25"
   }
 ];
+

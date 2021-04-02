@@ -1,5 +1,7 @@
 // Invoking strict mode https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Strict_mode#invoking_strict_mode
+//import * as marketplace from './data.js';
 'use strict';
+
 
 console.log('🚀 This is it.');
 
@@ -51,7 +53,7 @@ console.log(link)
 // 🎯 TODO: Number of products
 // 1. Create a variable and assign it the number of products
 // 2. Log the variable
-const nb = marketplace.length
+const nb = marketplace.length;
 console.log(nb)
 
 //correction

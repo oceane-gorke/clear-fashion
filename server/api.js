@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 require('dotenv').config();
 require('dotenv');
 
@@ -8,14 +7,8 @@ const helmet = require('helmet');
 const { request } = require('express');
 
 const PORT = 8092;
-=======
-const cors = require('cors');
-const express = require('express');
-const helmet = require('helmet');
 
-const PORT = 8092;
 
->>>>>>> f66195154ab69ddaba07392c2dc18dbae9549f74
 const app = express();
 
 module.exports = app;
@@ -26,7 +19,6 @@ app.use(helmet());
 
 app.options('*', cors());
 
-<<<<<<< HEAD
 //connection 
 const user = process.env.MONGOUSER;
 const password = process.env.MONGOPASSWORD;
@@ -39,13 +31,10 @@ console.log("MONGO", MONGODB_URI);
 const MONGODB_DB_NAME = 'WebAppClearFashionGO';
 
 
-=======
->>>>>>> f66195154ab69ddaba07392c2dc18dbae9549f74
 app.get('/', (request, response) => {
   response.send({'ack': true});
 });
 
-<<<<<<< HEAD
 
 //f9360699-2c7d-5cec-8529-374d3e166f87
 //60452e5edb264f983d2cc773
@@ -87,9 +76,3 @@ app.get('/products/:id', async (request, response) => {
 app.listen(PORT);
 console.log(`📡 Running on port ${PORT}`);
 
-
-    
-=======
-app.listen(PORT);
-console.log(`📡 Running on port ${PORT}`);
->>>>>>> f66195154ab69ddaba07392c2dc18dbae9549f74
