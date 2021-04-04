@@ -81,6 +81,59 @@ module.exports.find = async query => {
   }
 };
 
+
+module.exports.getMeta = async(page, size,brand=null,price=null ) => {
+  const db = await getDB();
+  const collection = db.collection(MONGODB_COLLECTION);
+  let query;
+  let count;
+  if(brand && price){
+    query={$and : [ {'brand':brand},{ price: { $lt: price }}]};
+  } else if(brand){
+    query={'brand':brand};
+  } else if(price){
+    query = { price: { $lt: price }}
+  } else {
+    query={};
+  }
+  count = await collection.find(query).count();
+  const pageCount = parseInt(count/size);
+  return {"currentPage" : page,"pageCount":pageCount,"pageSize":size,"count":count} 
+}
+/*
+module.exports.findPage = async (page,size,brand=null,price=null,desc=-1,sort='price') => {
+  try {
+    const db = await getDB();
+    const collection = db.collection(MONGODB_COLLECTION);
+    const offset = page ? page * size : 0;
+    let result;
+    let query;
+    let sortquery;
+    if(brand && price){
+      query={$and : [ {'brand':brand},{ price: { $lt: price }}]};
+    } else if(brand){
+      query={'brand':brand};
+    } else if(price){
+      query = { price: { $lt: price }}
+    } else {
+      query={};
+    }
+    if(sort == 'price'){
+      sortquery={'price':desc};
+    }else{
+      sortquery={'released':desc};
+    }
+    //.sort({'price': desc})
+    result = await collection.find(query).sort(sortquery).skip(offset)
+                  .limit(size).toArray(); 
+    
+    return result;
+  } catch (error) {
+    console.error('🚨 collection.findPage...', error);
+    return null;
+  }
+};*/
+
 /**
  * Close the connection
  */
