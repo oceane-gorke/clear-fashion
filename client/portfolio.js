@@ -26,7 +26,7 @@ const spanDate = document.querySelector('#date');
  * @param {Array} result - products to display
  * @param {Object} meta - pagination meta info
  */
-const setCurrentProducts = ({result, meta}) => {
+const setCurrentProducts = ({ result, meta }) => {
   currentProducts = result;
   currentPagination = meta;
 };
@@ -41,18 +41,19 @@ const fetchProducts = async (page = 1, size = 12) => {
   try {
     const response = await fetch(
       `https://clear-fashion-api.vercel.app?page=${page}&size=${size}`
+      //`https://clear-fashion-ashen.vercel.app?page=${page}&limit=${size}`
     );
     const body = await response.json();
 
     if (body.success !== true) {
       console.error(body);
-      return {currentProducts, currentPagination};
+      return { currentProducts, currentPagination };
     }
 
     return body.data;
   } catch (error) {
     console.error(error);
-    return {currentProducts, currentPagination};
+    return { currentProducts, currentPagination };
   }
 };
 
@@ -70,6 +71,7 @@ const renderProducts = products => {
         <span>${product.brand}</span>
         <a href="${product.link}">${product.name}</a>
         <span>${product.price}</span>
+        <span>${product.released}</span>
       </div>
     `;
     })
@@ -97,12 +99,12 @@ const renderPagination = pagination => {
   selectPage.selectedIndex = currentPage - 1;
 };*/
 
-function renderPagination (pagination){
+function renderPagination(pagination) {
   const nbPage = pagination.pageCount;
   let options = '';
 
-  for (var index=0; index<nbPage; index++){
-    options+='<option value ="' + (index+1) + '">' + (index+1) + '</option>';
+  for (var index = 0; index < nbPage; index++) {
+    options += '<option value ="' + (index + 1) + '">' + (index + 1) + '</option>';
   }
 
   selectPage.innerHTML = options;
@@ -114,16 +116,16 @@ function renderPagination (pagination){
  * @param  {Object} pagination
  */
 const renderIndicators = pagination => {
-  const {count} = pagination;
+  const { count } = pagination;
 
   spanNbProducts.innerHTML = count;
   spanNbProducts.innerHTML = currentProducts.length;
   spanNbProductsnew.innerHTML = sortRecent(currentProducts).length;
   //spanPrice50.innerHTML = compute_90;
-  spanPrice90.innerHTML = price_90 ;
- // spanPrice95.innerHTML;
+  spanPrice90.innerHTML = price_90;
+  // spanPrice95.innerHTML;
   //spanDate.innerHTML;
-};
+}
 /*
 const renderSort = sorted => {
   const {count} = pagination;
@@ -155,7 +157,7 @@ selectShow.addEventListener('change', event => {
     .then(() => render(currentProducts, currentPagination));
 });
 
-selectPage.addEventListener('change',event => {
+selectPage.addEventListener('change', event => {
   fetchProducts(parseInt(event.target.value), selectShow.value)
     .then(setCurrentProducts)
     .then(() => render(currentProducts, currentPagination))
@@ -163,28 +165,26 @@ selectPage.addEventListener('change',event => {
 
 selectBrand.addEventListener('change', event => {
   sortbrand(currentProducts, event.target.value)
-  .then(setCurrentProducts)
-  .then(renderBrand())
-  .then(() => render(currentProducts, currentPagination))
+    .then(setCurrentProducts)
+    .then(renderBrand())
+    .then(() => render(currentProducts, currentPagination))
 })
 
 
-selectDateAsc.addEventListener('click', event => 
-{
-  if(selectDateAsc.checked==true){
+selectDateAsc.addEventListener('click', event => {
+  if (selectDateAsc.checked == true) {
     renderProducts(sortRecent(currentProducts));
   }
-  else{
+  else {
     renderProducts(currentProducts);
   }
 })
 
-selectReasPrice.addEventListener('click', event => 
-{
-  if(selectReasPrice.checked==true){
+selectReasPrice.addEventListener('click', event => {
+  if (selectReasPrice.checked == true) {
     renderProducts(sortReasPrice(currentProducts));
   }
-  else{
+  else {
     renderProducts(currentProducts);
   }
 })
@@ -198,7 +198,7 @@ document.addEventListener('DOMContentLoaded', () =>
 /* 
 *Feature 1:
 Browse available pages
-*/ 
+*/
 //2e version
 /*
 selectPage.addEventListener('change', event => {
@@ -214,9 +214,8 @@ Filter by brands
 */
 const sortbrand = (products, brand) => {
   const sort_product = [];
-  for (var i =0; i< products.length; i++)
-  {
-    if (products[i]["brand"]==brand){
+  for (var i = 0; i < products.length; i++) {
+    if (products[i]["brand"] == brand) {
       sort_product.push(products[i]);
     }
   }
@@ -226,10 +225,8 @@ const sortbrand = (products, brand) => {
 
 const ListBrand = products => {
   const name_brand = [];
-  for (var i =0; i<products.length; i++)
-  {
-    if(name_brand.includes(products[i]["brand"])==false)
-    {
+  for (var i = 0; i < products.length; i++) {
+    if (name_brand.includes(products[i]["brand"]) == false) {
       name_brand.push(products[i]["brand"]);
     }
   }
@@ -237,11 +234,11 @@ const ListBrand = products => {
 }
 const renderBrand = brand => {
   const options = Array.from(
-    {'length' : brand.length},
+    { 'length': brand.length },
     (value, index) => `<option value="${brand[index]}">${brand[index]}</option>`
-    ).join('');
+  ).join('');
 
-    selectBrand.innerHTML=options;
+  selectBrand.innerHTML = options;
 }
 
 /*
@@ -250,7 +247,7 @@ Filter by recent products
 */
 //Math.trunc((Date.now() - Date.parse(x.released)) / (1000 * 3600 * 24)) < 2*7
 
-Date.prototype.minusDays = function(days) { 
+Date.prototype.minusDays = function (days) {
   //this.setDate(this.getDate() - parseInt(days));
   this.setDate(this.getDate() - days);
   return this;
@@ -262,11 +259,10 @@ const sortRecent = products => {
   //var twoWeeksAgo = currentTime.minusDays(15);
   const sort_product = [];
 
-  for (var i=0; i<products.length;i++)
-  {
+  for (var i = 0; i < products.length; i++) {
     let d = new Date.parse(products[i].released);
-    let time = (currentTime - d) / (1000*3600*24);
-    if (time > 2*7) {
+    let time = (currentTime - d) / (1000 * 3600 * 24);
+    if (time > 2 * 7) {
       sort_product.push(products[i]);
     }
   }
@@ -283,9 +279,8 @@ Filter by reasonable price
 const sortReasPrice = products => {
   const sort_product = [];
 
-  for (var i=0; i<products.length;i++)
-  {
-    
+  for (var i = 0; i < products.length; i++) {
+
     if (products[i].price < 50) {
       sort_product.push(products[i]);
     }
@@ -297,19 +292,19 @@ const sortReasPrice = products => {
 * Feature 5/6:
 Sort by price/date
 */
-function sort_price(a, b, order){
+function sort_price(a, b, order) {
   return (a.price > b.price) ? order : ((b.price > a.price) ? -order : 0);
 }
 
-function sort_date(a, b, order){
+function sort_date(a, b, order) {
   a = Date.parse(a.released);
   b = Date.parse(b.released);
   return (a > b) ? order : ((b > a) ? -order : 0);
 }
 
-selectSort.addEventListener('change', event=>{
+selectSort.addEventListener('change', event => {
 
-  switch(event.target.value){
+  switch (event.target.value) {
     case 'price-desc':
       currentProducts = [...currentProducts].sort((a, b) => sort_price(a, b, -1));
       break;
@@ -330,21 +325,21 @@ selectSort.addEventListener('change', event=>{
 * Feature 10:
 Number of price value indicator
 */
-const p_90 = currentProducts => { 
+const p_90 = currentProducts => {
   let tab = [...currentProducts].sort((a, b) => sort_price(a, b, 1));
-  let index = 90/100 * tab.length;
+  let index = 90 / 100 * tab.length;
   return tab[index].price;
 }
 
-function compute_50 () { 
+function compute_50() {
   let tab = [...filtered_products].sort((a, b) => sort_price(a, b, 1));
-  let index = Math.trunc(50/100 * tab.length)
+  let index = Math.trunc(50 / 100 * tab.length)
   return tab[index].price;
 }
 
-function compute_95 () { 
+function compute_95() {
   let tab = [...filtered_products].sort((a, b) => sort_price(a, b, 1));
-  let index = Math.trunc(95/100 * tab.length)
+  let index = Math.trunc(95 / 100 * tab.length)
   return tab[index].price;
 }
 

@@ -41,6 +41,7 @@ app.get('/', (request, response) => {
 
 
 
+
 //limit - number of products to return (default: 12)
 //brand - filter by brand (default: All brands)
 //price - filter by price (default: All price)
@@ -53,12 +54,23 @@ app.get('/products/search', async (request, response)=>{
   let brand = request.query.brand;
   let limit = request.query.limit;
   let price = request.query.price;
+  let res;
+  let meta;
 
   const collection = db.collection('products');
-  const prod = await collection.find({brand: brand}, {price: ({$lte : price})}).toArray();
+  const prod = await collection.find({brand: brand}, {price: ({$lte : price})}, {limit:limit}).toArray();
 
-  response.send(prod);
-})
+    //res = await db.findPage(parseInt(req.query.page),parseInt(req.query.size),brand = req.query.brand,price = parseInt(req.query.price),desc = (req.query.desc)?-1:1,sort = (req.query.sort)?'released':'price');
+    //meta = await db.getMeta(parseInt(req.query.page),parseInt(req.query.size),brand = req.query.brand,price = parseInt(req.query.price));
+    /*
+    let products = {
+      "success" : true,
+      "data" : {
+      "result" : prod,
+      "meta": meta
+        }}*/
+    response.send(prod);
+  });
 
 app.get('/products/:id', async (request, response) => {
   const client = await MongoClient.connect(MONGODB_URI, {'useNewUrlParser': true});
