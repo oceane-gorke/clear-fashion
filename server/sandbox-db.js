@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 //connection
 const user = process.env.MONGOUSER;
 const password = process.env.MONGOPASSWORD;
@@ -14,13 +13,7 @@ const dedicatedbrand = require('./sources/dedicatedbrand');
 const loom = require('./sources/loom');
 const adresse = require('./sources/adresseparis')
 const db = require('./db');
-const { constants } = require('fs');
-=======
-/* eslint-disable no-console, no-process-exit */
-const dedicatedbrand = require('./sites/dedicatedbrand');
-const loom = require('./sites/loom');
-const db = require('./db');
->>>>>>> f66195154ab69ddaba07392c2dc18dbae9549f74
+const fs = require('fs');
 
 async function sandbox () {
   try {
@@ -64,19 +57,22 @@ async function sandbox () {
     products.push(results.flat());
     products = products.flat();
 
+    products.forEach(i=> {
+      if(i['brand']=="loom"){
+        console.log("brandI",i['brand'] )
+        i['photo']="https:"+i['photo'];
+        console.log(i['photo']);
+      }
+    })
     console.log('\n');
 
-    console.log(`👕 ${products.length} total of products found`);
+    //console.log(`👕 ${products.length} total of products found`);
 
     console.log('\n');
-<<<<<<< HEAD
     
-=======
-
->>>>>>> f66195154ab69ddaba07392c2dc18dbae9549f74
     const result = await db.insert(products);
 
-    console.log(`💽  ${result.insertedCount} inserted products`);
+    //console.log(`💽  ${result.insertedCount} inserted products`);
 
     console.log('\n');
 
@@ -85,14 +81,11 @@ async function sandbox () {
     const loomOnly = await db.find({'brand': 'loom'});
 
     console.log(`👕 ${loomOnly.length} total of products found for Loom`);
-    console.log(loomOnly);
+    //console.log(loomOnly);
 
-<<<<<<< HEAD
-    //let datascraped = JSON.stringify(products);
-    //fs.writeFileSync('database/dedicated_products.json', datascraped);
+    let datascraped = JSON.stringify(products);
+    fs.writeFileSync('server/database/products.json', datascraped);
 
-=======
->>>>>>> f66195154ab69ddaba07392c2dc18dbae9549f74
     db.close();
   } catch (e) {
     console.error(e);

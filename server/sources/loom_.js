@@ -30,7 +30,7 @@ const parse = data => {
             .find('.product-title')
             .text()
             .trim(),
-          'photo': $(element)
+          'photo': "https:" + $(element)
             .find('.product-grid-image .product_card__image-wrapper img')
             .attr('src'),
           '_id': uuidv5(link, uuidv5.URL)

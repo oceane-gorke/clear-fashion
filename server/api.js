@@ -33,7 +33,32 @@ const MONGODB_DB_NAME = 'WebAppClearFashionGO';
 
 
 app.get('/', (request, response) => {
-  response.send({'ack': true});
+  response.send("hey");
+  /*
+  const client = await MongoClient.connect(MONGODB_URI, {'useNewUrlParser': true});
+  const db =  client.db(MONGODB_DB_NAME);
+  let page = parseInt(request.query.page);
+  let size = parseInt(request.query.size);
+  
+
+  const collection = db.collection('products');
+
+  //const query = {$and: [{brand: brand}, {price: {$lte : price}}]};
+  const query= await collection.find({}).toArray();
+  const whichpage= page!=0 ? page*size : 0
+  //page commence à 0 avec le skip
+  const prod = await collection.find({}).skip(whichpage).limit(size).toArray();
+
+    
+  let meta = await getMetaData(page,size, query);
+    
+    let products = {
+      "success" : true,
+      "data" : {
+      "result" : prod,
+      "meta": meta
+        }}
+  response.send(products);*/
 });
 
 
@@ -81,7 +106,7 @@ app.get('/products/search', async (request, response)=>{
   //page commence à 0 avec le skip
   const prod = await collection.find({$and : [ {'brand':brand},{ price: { $lte: price }}]}).skip(whichpage).limit(size).toArray();
 
-    //res = await db.findPage(parseInt(req.query.page),parseInt(req.query.size),brand = req.query.brand,price = parseInt(req.query.price),desc = (req.query.desc)?-1:1,sort = (req.query.sort)?'released':'price');
+    
   let meta = await getMetaData(page,size, query);
     
     let products = {

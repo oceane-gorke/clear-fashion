@@ -22,7 +22,7 @@ async function insert (mongodb_uri, mongodb_db_name){
 
     //insert 
     //JSON.parse(fs.readFileSync(path.join(process.cwd(), SHOPIFY_FILE)))
-    return fs.readFileSync(path.join(process.cwd(), "./server/database/mudjeans_products.json"), (error,jsonString)=>{
+    return fs.readFileSync(path.join(process.cwd(), "./server/database/products.json"), (error,jsonString)=>{
         if (error){
             console.log(error);
             console.log("Error");
