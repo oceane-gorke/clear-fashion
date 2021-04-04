@@ -6,6 +6,7 @@ const express = require('express');
 const helmet = require('helmet');
 const { request } = require('express');
 
+//const db = require("./db");
 const PORT = 8092;
 
 
@@ -47,21 +48,41 @@ app.get('/', (request, response) => {
 //price - filter by price (default: All price)
 //http://localhost:8092/products/search?limit=5&brand=loom&price=30
 
+
+
+const getMetaData = async (page, size, q) => {
+  const client = await MongoClient.connect(MONGODB_URI, {'useNewUrlParser': true});
+  const db =  client.db(MONGODB_DB_NAME);
+  const collection = db.collection('products');
+  const nb = q.length;
+  //onst nb=4;
+  const pageCount = parseInt(nb/size);
+  return {"currentPage" : page,"pageCount":pageCount,"pageSize":size,"count":nb} 
+}
+
+
+
+
 app.get('/products/search', async (request, response)=>{
 
   const client = await MongoClient.connect(MONGODB_URI, {'useNewUrlParser': true});
   const db =  client.db(MONGODB_DB_NAME);
   let brand = request.query.brand;
-  let limit = request.query.limit;
-  let price = request.query.price;
-  let res;
-  let meta;
+  let price = parseInt(request.query.price);
+  let page = parseInt(request.query.page);
+  let size = parseInt(request.query.size);
+  
 
   const collection = db.collection('products');
-  const prod = await collection.find({brand: brand}, {price: ({$lte : price})}, {limit:limit}).toArray();
+
+  //const query = {$and: [{brand: brand}, {price: {$lte : price}}]};
+  const query= await collection.find({$and : [ {'brand':brand},{ price: { $lte: price }}]}).toArray();
+  const whichpage= page!=0 ? page*size : 0
+  //page commence à 0 avec le skip
+  const prod = await collection.find({$and : [ {'brand':brand},{ price: { $lte: price }}]}).skip(whichpage).limit(size).toArray();
 
     //res = await db.findPage(parseInt(req.query.page),parseInt(req.query.size),brand = req.query.brand,price = parseInt(req.query.price),desc = (req.query.desc)?-1:1,sort = (req.query.sort)?'released':'price');
-    meta = await db.getMeta(parseInt(req.query.page),parseInt(req.query.size),brand = req.query.brand,price = parseInt(req.query.price));
+  let meta = await getMetaData(page,size, query);
     
     let products = {
       "success" : true,
@@ -69,7 +90,7 @@ app.get('/products/search', async (request, response)=>{
       "result" : prod,
       "meta": meta
         }}
-    response.send(products);
+  response.send(products);
   });
 
 app.get('/products/:id', async (request, response) => {
@@ -77,11 +98,17 @@ app.get('/products/:id', async (request, response) => {
   const db =  client.db(MONGODB_DB_NAME);
   const collection = db.collection('products');
   const id_prod = await collection.find({_id:MongoClient.ObjectId(request.params.id)}).toArray();
-  //const id_prod = await collection.find({_id:request.params.id}).toArray();
-  //console.log(request.params.id);
-  //await client.close();
-  //console.log(id_prod);
-  response.send(id_prod);
+
+  let meta = await getMetaData(1,1, id_prod);
+    
+    let ids = {
+      "success" : true,
+      "data" : {
+      "result" : id_prod,
+      "meta": meta
+        }}
+
+  response.send(ids);
 
 });
 
