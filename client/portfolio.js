@@ -13,6 +13,7 @@ const sectionProducts = document.querySelector('#products');
 const spanNbProducts = document.querySelector('#nbProducts');
 //const selectDateAsc = document.querySelector('#recentlyreleased');
 const selectReasPrice = document.querySelector('#reasprice');
+const selectFavs = document.querySelector('#favs');
 const selectSort = document.querySelector('#sort-select');
 
 const spanNbProductsnew = document.querySelector('#nbProductsnew');
@@ -37,21 +38,37 @@ const setCurrentProducts = ({ result, meta }) => {
  * @param  {Number}  [size=12] - size of the page
  * @return {Object}
  */
-const fetchProducts = async (page = 1, size = 12) => {
+const fetchProducts = async (page = 1, size = 12, brand="ALL") => {
   try {
+    if (brand=="ALL")
+    {
+      
     const response = await fetch(
       //`https://clear-fashion-api.vercel.app?page=${page}&size=${size}`
-      //`https://clear-fashion-ashen.vercel.app/products/search?page=${page}&limit=${size}`
-      `https://clear-fashion-5w3vcun1k-oceane-gorke.vercel.app/?page=${page}&size=${size}`
+      `https://clear-fashion-ashen.vercel.app/?page=${page}&size=${size}`
+      //`https://clear-fashion-5w3vcun1k-oceane-gorke.vercel.app/?page=${page}&size=${size}`
       );
     const body = await response.json();
-
+    
     if (body.success !== true) {
       console.error(body);
       return { currentProducts, currentPagination };
     }
 
     return body.data;
+  }
+  else {
+    const response = await fetch(
+      `https://clear-fashion-5w3vcun1k-oceane-gorke.vercel.app/?page=${page}&size=${size}&brand=${brand}`
+      );
+    const body = await response.json();
+    if (body.success !== true) {
+      console.error(body);
+      return { currentProducts, currentPagination };
+    }
+
+    return body.data;
+  }
   } catch (error) {
     console.error(error);
     return { currentProducts, currentPagination };
@@ -69,11 +86,18 @@ const renderProducts = products => {
     .map(product => {
       return `
       <div class="product" id=${product.uuid}>
-        <span>${product.brand}</span>
-        <a href="${product.link}">${product.name}</a>
-        <span>${product.price}</span>
-        <span>${product.released}</span>
-        <span>https:${product.photo}</span>
+        <div class="product-image">
+        <a href="${product.link} target="_blank">
+        <image src="https:${product.photo}">
+              </a>
+            </div>
+        <div class="product-info">
+        <span><i>${product.brand}</i></span>
+        <a href="${product.link}"><b>${product.name}</b></a>
+        <span>${product.price}€</span>
+        <input id='${product.name}' type="checkbox">
+        <span>⭐️</span>
+        </div>
       </div>
       <br>
     `;
@@ -126,9 +150,9 @@ const renderIndicators = pagination => {
   spanNbProducts.innerHTML = currentProducts.length;
   spanNbProductsnew.innerHTML = sortRecent(currentProducts).length;
   //spanNbProductsnew.innerHTML = 4;
-  //spanPrice50.innerHTML = compute_90;
-  //spanPrice90.innerHTML = price_90;
-  // spanPrice95.innerHTML;
+  spanPrice50.innerHTML = p_50;
+  spanPrice90.innerHTML = p_90;
+  spanPrice95.innerHTML= p_95;
   spanDate.innerHTML=sortRecent(currentProducts)[0].released;
 }
 /*
@@ -143,8 +167,8 @@ const render = (products, pagination) => {
   renderProducts(products);
   renderPagination(pagination);
   renderIndicators(pagination);
-  const brand = ListBrand(currentProducts);
-  renderBrand(brand);
+  //const brand = ListBrand(currentProducts);
+  //renderBrand(brand);
   //renderRecent(products);
 };
 
@@ -169,22 +193,14 @@ selectPage.addEventListener('change', event => {
 })
 
 selectBrand.addEventListener('change', event => {
-  fetchProducts(currentProducts, event.target.value)
+  fetchProducts(currentPagination.currentPage,selectShow.value,event.target.value)
     .then(setCurrentProducts)
     .then(() => render(currentProducts, currentPagination))
 
   
 })
 
-/*
-selectDateAsc.addEventListener('click', event => {
-  if (selectDateAsc.checked == true) {
-    renderProducts(sortRecent(currentProducts));
-  }
-  else {
-    renderProducts(currentProducts);
-  }
-})*/
+
 
 selectReasPrice.addEventListener('click', event => {
   if (selectReasPrice.checked == true) {
@@ -218,6 +234,11 @@ selectPage.addEventListener('change', event => {
 * Feature 2:
 Filter by brands
 */
+function getBrand(products){
+  const brands = ["ALL","loom","dedicated"];
+  return brands;
+}
+
 const sortbrand = (products, brand) => {
   const sort_product = [];
   for (var i = 0; i < products.length; i++) {
@@ -337,17 +358,46 @@ const p_90 = currentProducts => {
   return tab[index].price;
 }
 
-function compute_50() {
-  let tab = [...filtered_products].sort((a, b) => sort_price(a, b, 1));
-  let index = Math.trunc(50 / 100 * tab.length)
+const p_50 = currentProducts => {
+  let tab = [...currentProducts].sort((a, b) => sort_price(a, b, 1));
+  let index = 50 / 100 * tab.length;
   return tab[index].price;
 }
 
-function compute_95() {
-  let tab = [...filtered_products].sort((a, b) => sort_price(a, b, 1));
-  let index = Math.trunc(95 / 100 * tab.length)
+const p_95 = currentProducts => {
+  let tab = [...currentProducts].sort((a, b) => sort_price(a, b, 1));
+  let index = 95 / 100 * tab.length;
   return tab[index].price;
 }
 
 
+// Feature : FAVORITES
+function addToFavorite(product){
+  if (favorites.includes(product)==false)
+  {
+    favorites.push(product)
+  }
+  else{
+    for (var i=0;i<favorites.length;i++){
+      if(favorites[i]==product)
+      {
+        favorites.splice(i,1)
+      }
+    }
+  }
+}
 
+selectFavorite.addEventListener("change",event=> {  
+
+  render(currentProducts, currentPagination);
+});
+
+sectionProducts.addEventListener("change",event=> {
+  for (var i =0;i<currentProducts.length;i++)
+  {
+    if (currentProducts[i].name == event.target.id)
+    {
+      addToFavorite(currentProducts[i])
+    }
+  }
+});
