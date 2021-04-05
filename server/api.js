@@ -32,42 +32,6 @@ console.log("MONGO", MONGODB_URI);
 const MONGODB_DB_NAME = 'WebAppClearFashionGO';
 
 
-//app.get('/hey', (request, response) => {
-  //response.send("hey");
-  /*
-  const client = await MongoClient.connect(MONGODB_URI, {'useNewUrlParser': true});
-  const db =  client.db(MONGODB_DB_NAME);
-  let page = parseInt(request.query.page);
-  let size = parseInt(request.query.size);
-  
-
-  const collection = db.collection('products');
-
-  //const query = {$and: [{brand: brand}, {price: {$lte : price}}]};
-  const query= await collection.find({}).toArray();
-  const whichpage= page!=0 ? page*size : 0
-  //page commence à 0 avec le skip
-  const prod = await collection.find({}).skip(whichpage).limit(size).toArray();
-
-    
-  let meta = await getMetaData(page,size, query);
-    
-    let products = {
-      "success" : true,
-      "data" : {
-      "result" : prod,
-      "meta": meta
-        }}
-  response.send(products);*/
-//});
-
-
-//f9360699-2c7d-5cec-8529-374d3e166f87
-//60452e5edb264f983d2cc773
-
-
-
-
 //limit - number of products to return (default: 12)
 //brand - filter by brand (default: All brands)
 //price - filter by price (default: All price)
