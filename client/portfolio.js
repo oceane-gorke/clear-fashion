@@ -60,6 +60,7 @@ const fetchProducts = async (page = 1, size = 12, brand="ALL") => {
   }
   else {
     const response = await fetch(
+      
       `https://clear-fashion-ashen.vercel.app/products/search?page=${page}&size=${size}&brand=${brand}`
       );
     const body = await response.json();

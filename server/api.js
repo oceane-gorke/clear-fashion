@@ -90,8 +90,12 @@ app.get('/', async(request, response) => {
   const db =  client.db(MONGODB_DB_NAME);
   let page = parseInt(request.query.page);
   let size = parseInt(request.query.size);
+  let brand = request.query.brand;
+  let price = parseInt(request.query.price);
   const collection = db.collection('products');
   const whichpage= page!=0 ? page*size : 0
+  if (brand==null && price==null)
+  {
   let query= await collection.find({}).toArray();
   let q = await collection.find({}).skip(whichpage).limit(size).toArray();
 
@@ -104,6 +108,64 @@ app.get('/', async(request, response) => {
       "meta": meta
         }}
   response.send(products);
+      }
+  if(brand!=null && price!=null)
+  {
+  
+
+  //const query = {$and: [{brand: brand}, {price: {$lte : price}}]};
+  const query= await collection.find({$and : [ {'brand':brand},{ price: { $lte: price }}]}).toArray();
+  const whichpage= page!=0 ? page*size : 0
+  //page commence à 0 avec le skip
+  const prod = await collection.find({$and : [ {'brand':brand},{ price: { $lte: price }}]}).skip(whichpage).limit(size).toArray();
+
+    
+  let meta = await getMetaData(page,size, query);
+    
+    let products = {
+      "success" : true,
+      "data" : {
+      "result" : prod,
+      "meta": meta
+        }}
+  response.send(products);
+      }
+  else if (brand==null && price!=null)
+  {
+    const query= await collection.find({ price: { $lte: price }}).toArray();
+    const whichpage= page!=0 ? page*size : 0
+    //page commence à 0 avec le skip
+    const prod = await collection.find({ price: { $lte: price }}).skip(whichpage).limit(size).toArray();
+  
+      
+    let meta = await getMetaData(page,size, query);
+      
+      let products = {
+        "success" : true,
+        "data" : {
+        "result" : prod,
+        "meta": meta
+          }}
+    response.send(products);
+  }
+  else if (brand!=null && price==null)
+  {
+    const query= await collection.find({ brand:brand}).toArray();
+    const whichpage= page!=0 ? page*size : 0
+    //page commence à 0 avec le skip
+    const prod = await collection.find({ brand: brand}).skip(whichpage).limit(size).toArray();
+  
+      
+    let meta = await getMetaData(page,size, query);
+      
+      let products = {
+        "success" : true,
+        "data" : {
+        "result" : prod,
+        "meta": meta
+          }}
+    response.send(products);
+  }
 })
 
 
