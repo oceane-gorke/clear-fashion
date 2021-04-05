@@ -11,7 +11,7 @@ const selectPage = document.querySelector('#page-select');
 const selectBrand = document.querySelector('#brand-select');
 const sectionProducts = document.querySelector('#products');
 const spanNbProducts = document.querySelector('#nbProducts');
-const selectDateAsc = document.querySelector('#recentlyreleased');
+//const selectDateAsc = document.querySelector('#recentlyreleased');
 const selectReasPrice = document.querySelector('#reasprice');
 const selectSort = document.querySelector('#sort-select');
 
@@ -41,7 +41,7 @@ const fetchProducts = async (page = 1, size = 12) => {
   try {
     const response = await fetch(
       //`https://clear-fashion-api.vercel.app?page=${page}&size=${size}`
-      `https://clear-fashion-ashen.vercel.app?page=${page}&limit=${size}`
+      `https://clear-fashion-ashen.vercel.app/products/search?page=${page}&limit=${size}`
     );
     const body = await response.json();
 
@@ -72,14 +72,16 @@ const renderProducts = products => {
         <a href="${product.link}">${product.name}</a>
         <span>${product.price}</span>
         <span>${product.released}</span>
+        <span>https:${product.photo}</span>
       </div>
+      <br>
     `;
     })
     .join('');
 
   div.innerHTML = template;
   fragment.appendChild(div);
-  sectionProducts.innerHTML = '<h2>Products</h2>';
+  sectionProducts.innerHTML = '<h2>• Products •</h2>';
   sectionProducts.appendChild(fragment);
 };
 
@@ -111,6 +113,7 @@ function renderPagination(pagination) {
 }
 
 
+
 /**
  * Render page selector
  * @param  {Object} pagination
@@ -118,13 +121,14 @@ function renderPagination(pagination) {
 const renderIndicators = pagination => {
   const { count } = pagination;
 
-  spanNbProducts.innerHTML = count;
+ // spanNbProducts.innerHTML = count;
   spanNbProducts.innerHTML = currentProducts.length;
   spanNbProductsnew.innerHTML = sortRecent(currentProducts).length;
+  //spanNbProductsnew.innerHTML = 4;
   //spanPrice50.innerHTML = compute_90;
-  spanPrice90.innerHTML = price_90;
+  //spanPrice90.innerHTML = price_90;
   // spanPrice95.innerHTML;
-  //spanDate.innerHTML;
+  spanDate.innerHTML=sortRecent(currentProducts)[0].released;
 }
 /*
 const renderSort = sorted => {
@@ -164,13 +168,14 @@ selectPage.addEventListener('change', event => {
 })
 
 selectBrand.addEventListener('change', event => {
-  sortbrand(currentProducts, event.target.value)
+  fetchProducts(currentProducts, event.target.value)
     .then(setCurrentProducts)
-    .then(renderBrand())
     .then(() => render(currentProducts, currentPagination))
+
+  
 })
 
-
+/*
 selectDateAsc.addEventListener('click', event => {
   if (selectDateAsc.checked == true) {
     renderProducts(sortRecent(currentProducts));
@@ -178,7 +183,7 @@ selectDateAsc.addEventListener('click', event => {
   else {
     renderProducts(currentProducts);
   }
-})
+})*/
 
 selectReasPrice.addEventListener('click', event => {
   if (selectReasPrice.checked == true) {
