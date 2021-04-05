@@ -32,8 +32,8 @@ console.log("MONGO", MONGODB_URI);
 const MONGODB_DB_NAME = 'WebAppClearFashionGO';
 
 
-app.get('/hey', (request, response) => {
-  response.send("hey");
+//app.get('/hey', (request, response) => {
+  //response.send("hey");
   /*
   const client = await MongoClient.connect(MONGODB_URI, {'useNewUrlParser': true});
   const db =  client.db(MONGODB_DB_NAME);
@@ -59,7 +59,7 @@ app.get('/hey', (request, response) => {
       "meta": meta
         }}
   response.send(products);*/
-});
+//});
 
 
 //f9360699-2c7d-5cec-8529-374d3e166f87
