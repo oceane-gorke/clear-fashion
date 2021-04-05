@@ -115,9 +115,11 @@ app.get('/products/search', async (request, response)=>{
   let price = parseInt(request.query.price);
   let page = parseInt(request.query.page);
   let size = parseInt(request.query.size);
-  
-
   const collection = db.collection('products');
+  
+  if(brand!=null && price!=null)
+  {
+  
 
   //const query = {$and: [{brand: brand}, {price: {$lte : price}}]};
   const query= await collection.find({$and : [ {'brand':brand},{ price: { $lte: price }}]}).toArray();
@@ -135,6 +137,43 @@ app.get('/products/search', async (request, response)=>{
       "meta": meta
         }}
   response.send(products);
+      }
+  else if (brand==null && price!=null)
+  {
+    const query= await collection.find({ price: { $lte: price }}).toArray();
+    const whichpage= page!=0 ? page*size : 0
+    //page commence à 0 avec le skip
+    const prod = await collection.find({ price: { $lte: price }}).skip(whichpage).limit(size).toArray();
+  
+      
+    let meta = await getMetaData(page,size, query);
+      
+      let products = {
+        "success" : true,
+        "data" : {
+        "result" : prod,
+        "meta": meta
+          }}
+    response.send(products);
+  }
+  else if (brand!=null && price==null)
+  {
+    const query= await collection.find({ brand:brand}).toArray();
+    const whichpage= page!=0 ? page*size : 0
+    //page commence à 0 avec le skip
+    const prod = await collection.find({ brand: brand}).skip(whichpage).limit(size).toArray();
+  
+      
+    let meta = await getMetaData(page,size, query);
+      
+      let products = {
+        "success" : true,
+        "data" : {
+        "result" : prod,
+        "meta": meta
+          }}
+    response.send(products);
+  }
   });
 
 app.get('/products/:id', async (request, response) => {

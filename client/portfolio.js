@@ -39,10 +39,11 @@ const setCurrentProducts = ({ result, meta }) => {
  * @return {Object}
  */
 const fetchProducts = async (page = 1, size = 12, brand="ALL") => {
+  
   try {
     if (brand=="ALL")
     {
-      
+    console.log("hey")
     const response = await fetch(
       //`https://clear-fashion-api.vercel.app?page=${page}&size=${size}`
       `https://clear-fashion-ashen.vercel.app/?page=${page}&size=${size}`
@@ -59,15 +60,18 @@ const fetchProducts = async (page = 1, size = 12, brand="ALL") => {
   }
   else {
     const response = await fetch(
-      `https://clear-fashion-5w3vcun1k-oceane-gorke.vercel.app/?page=${page}&size=${size}&brand=${brand}`
+      `https://clear-fashion-ashen.vercel.app/products/search?page=${page}&size=${size}&brand=${brand}`
       );
     const body = await response.json();
+    console.log(body);
+    console.log("success", body);
     if (body.success !== true) {
       console.error(body);
       return { currentProducts, currentPagination };
     }
-
+    console.log(body.data);
     return body.data;
+    
   }
   } catch (error) {
     console.error(error);
@@ -193,9 +197,12 @@ selectPage.addEventListener('change', event => {
 })
 
 selectBrand.addEventListener('change', event => {
-  fetchProducts(currentPagination.currentPage,selectBrand.value,event.target.value)
+  fetchProducts(currentPagination.currentPage,selectShow.value,event.target.value)
     .then(setCurrentProducts)
-    .then(() => render(currentProducts, currentPagination))
+    .then(() => renderProducts(currentProducts, currentPagination))
+    console.log("pagination", currentPagination.currentPage)
+    console.log("show?", selectShow.value);
+    console.log(event.target.value);
 
   
 })
@@ -210,6 +217,13 @@ selectReasPrice.addEventListener('click', event => {
     renderProducts(currentProducts);
   }
 })
+
+selectFavs.addEventListener('click', event => {
+
+  renderProducts(currentProducts);
+
+})
+
 
 document.addEventListener('DOMContentLoaded', () =>
   fetchProducts()
@@ -234,11 +248,6 @@ selectPage.addEventListener('change', event => {
 * Feature 2:
 Filter by brands
 */
-function getBrand(products){
-  const brands = ["ALL","loom","dedicated"];
-  return brands;
-}
-
 const sortbrand = (products, brand) => {
   const sort_product = [];
   for (var i = 0; i < products.length; i++) {
@@ -387,10 +396,7 @@ function addToFavorite(product){
   }
 }
 
-selectFavorite.addEventListener("change",event=> {  
 
-  render(currentProducts, currentPagination);
-});
 
 sectionProducts.addEventListener("change",event=> {
   for (var i =0;i<currentProducts.length;i++)
