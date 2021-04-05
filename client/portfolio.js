@@ -8,7 +8,7 @@ let currentPagination = {};
 // inititiqte selectors
 const selectShow = document.querySelector('#show-select');
 const selectPage = document.querySelector('#page-select');
-const selectBrand = document.querySelector('#brand-select');
+const selectBrand = document.querySelector('#brand-select-');
 const sectionProducts = document.querySelector('#products');
 const spanNbProducts = document.querySelector('#nbProducts');
 //const selectDateAsc = document.querySelector('#recentlyreleased');
@@ -16,7 +16,7 @@ const selectReasPrice = document.querySelector('#reasprice');
 const selectFavs = document.querySelector('#favs');
 const selectSort = document.querySelector('#sort-select');
 
-const spanNbProductsnew = document.querySelector('#nbProductsnew');
+const spanNbProductstotal = document.querySelector('#nbProductstotal');
 const spanPrice50 = document.querySelector('#price50');
 const spanPrice90 = document.querySelector('#price90');
 const spanPrice95 = document.querySelector('#price95');
@@ -88,7 +88,7 @@ const renderProducts = products => {
       <div class="product" id=${product.uuid}>
         <div class="product-image">
         <a href="${product.link} target="_blank">
-        <image src="https:${product.photo}">
+        <image img.fit src=${product.photo}>
               </a>
             </div>
         <div class="product-info">
@@ -148,12 +148,12 @@ const renderIndicators = pagination => {
 
  // spanNbProducts.innerHTML = count;
   spanNbProducts.innerHTML = currentProducts.length;
-  spanNbProductsnew.innerHTML = sortRecent(currentProducts).length;
+  spanNbProductstotal.innerHTML = 97;
   //spanNbProductsnew.innerHTML = 4;
-  spanPrice50.innerHTML = p_50;
-  spanPrice90.innerHTML = p_90;
-  spanPrice95.innerHTML= p_95;
-  spanDate.innerHTML=sortRecent(currentProducts)[0].released;
+  spanPrice50.innerHTML = p_50(currentProducts);
+  spanPrice90.innerHTML = p_90(currentProducts);
+  spanPrice95.innerHTML= p_95(currentProducts);
+  //spanDate.innerHTML=sortRecent(currentProducts)[0].released;
 }
 /*
 const renderSort = sorted => {
@@ -193,7 +193,7 @@ selectPage.addEventListener('change', event => {
 })
 
 selectBrand.addEventListener('change', event => {
-  fetchProducts(currentPagination.currentPage,selectShow.value,event.target.value)
+  fetchProducts(currentPagination.currentPage,selectBrand.value,event.target.value)
     .then(setCurrentProducts)
     .then(() => render(currentProducts, currentPagination))
 
@@ -352,21 +352,21 @@ selectSort.addEventListener('change', event => {
 * Feature 10:
 Number of price value indicator
 */
-const p_90 = currentProducts => {
+function p_90 (currentProducts) {
   let tab = [...currentProducts].sort((a, b) => sort_price(a, b, 1));
-  let index = 90 / 100 * tab.length;
+  let index = Math.round(90 / 100 * tab.length);
   return tab[index].price;
 }
 
-const p_50 = currentProducts => {
+function p_50 (currentProducts){
   let tab = [...currentProducts].sort((a, b) => sort_price(a, b, 1));
-  let index = 50 / 100 * tab.length;
+  let index = Math.round(50 / 100 * tab.length);
   return tab[index].price;
 }
 
-const p_95 = currentProducts => {
+function p_95 (currentProducts) {
   let tab = [...currentProducts].sort((a, b) => sort_price(a, b, 1));
-  let index = 95 / 100 * tab.length;
+  let index = Math.round(95 / 100 * tab.length);
   return tab[index].price;
 }
 
