@@ -4,7 +4,7 @@ require('dotenv');
 const cors = require('cors');
 const express = require('express');
 const helmet = require('helmet');
-const { request } = require('express');
+const { request, response } = require('express');
 
 //const db = require("./db");
 const PORT = 8092;
@@ -32,7 +32,7 @@ console.log("MONGO", MONGODB_URI);
 const MONGODB_DB_NAME = 'WebAppClearFashionGO';
 
 
-app.get('/', (request, response) => {
+app.get('/hey', (request, response) => {
   response.send("hey");
   /*
   const client = await MongoClient.connect(MONGODB_URI, {'useNewUrlParser': true});
@@ -85,7 +85,26 @@ const getMetaData = async (page, size, q) => {
   return {"currentPage" : page,"pageCount":pageCount,"pageSize":size,"count":nb} 
 }
 
+app.get('/', async(request, response) => {
+  const client = await MongoClient.connect(MONGODB_URI, {'useNewUrlParser': true});
+  const db =  client.db(MONGODB_DB_NAME);
+  let page = parseInt(request.query.page);
+  let size = parseInt(request.query.size);
+  const collection = db.collection('products');
+  const whichpage= page!=0 ? page*size : 0
+  let query= await collection.find({}).toArray();
+  let q = await collection.find({}).skip(whichpage).limit(size).toArray();
 
+  let meta = await getMetaData(page,size, query);
+    
+    let products = {
+      "success" : true,
+      "data" : {
+      "result" : q,
+      "meta": meta
+        }}
+  response.send(products);
+})
 
 
 app.get('/products/search', async (request, response)=>{
