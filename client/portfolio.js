@@ -14,6 +14,7 @@ const spanNbProducts = document.querySelector('#nbProducts');
 //const selectDateAsc = document.querySelector('#recentlyreleased');
 const selectReasPrice = document.querySelector('#reasprice');
 const selectFavs = document.querySelector('#favs');
+//const addFav = document.querySelector('#favadded');
 const selectSort = document.querySelector('#sort-select');
 
 const spanNbProductstotal = document.querySelector('#nbProductstotal');
@@ -61,7 +62,7 @@ const fetchProducts = async (page = 1, size = 12, brand="ALL") => {
   else {
     const response = await fetch(
       
-      `https://clear-fashion-ashen.vercel.app/products/search?page=${page}&size=${size}&brand=${brand}`
+      `https://clear-fashion-ashen.vercel.app/?page=${page}&size=${size}&brand=${brand}`
       );
     const body = await response.json();
     console.log(body);
@@ -90,18 +91,15 @@ const renderProducts = products => {
   const template = products
     .map(product => {
       return `
-      <div class="product" id=${product.uuid}>
-        <div class="product-image">
+      <div  id=${product.uuid}>
         <a href="${product.link} target="_blank">
-        <image img.fit src=${product.photo}>
+        <image image.fit img src=${product.photo}>
               </a>
-            </div>
-        <div class="product-info">
         <span><i>${product.brand}</i></span>
         <a href="${product.link}"><b>${product.name}</b></a>
-        <span>${product.price}€</span>
-        <input id='${product.name}' type="checkbox">
-        <span>⭐️</span>
+        <span>${product.price}€&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp</span>
+        <input type="checkbox" id="favadded" name="favadded">
+          <label for= "favadded">Add to Fav ⭐️&nbsp&nbsp</span>
         </div>
       </div>
       <br>
@@ -119,17 +117,6 @@ const renderProducts = products => {
  * Render page selector
  * @param  {Object} pagination
  */
-/*
-const renderPagination = pagination => {
-  const {currentPage, pageCount} = pagination;
-  const options = Array.from(
-    {'length': pageCount},
-    (value, index) => `<option value="${index + 1}">${index + 1}</option>`
-  ).join('');
-
-  selectPage.innerHTML = options;
-  selectPage.selectedIndex = currentPage - 1;
-};*/
 
 function renderPagination(pagination) {
   const nbPage = pagination.pageCount;
@@ -160,12 +147,7 @@ const renderIndicators = pagination => {
   spanPrice95.innerHTML= p_95(currentProducts);
   //spanDate.innerHTML=sortRecent(currentProducts)[0].released;
 }
-/*
-const renderSort = sorted => {
-  const {count} = pagination;
 
-  spanNbProducts.innerHTML = count;
-};*/
 
 
 const render = (products, pagination) => {
@@ -220,7 +202,9 @@ selectReasPrice.addEventListener('click', event => {
 })
 
 selectFavs.addEventListener('click', event => {
-
+  if(selectFavs.checked==true){
+    renderProducts(fav_prod);
+  }
   renderProducts(currentProducts);
 
 })
@@ -381,30 +365,22 @@ function p_95 (currentProducts) {
 }
 
 
+
 // Feature : FAVORITES
+let fav_prod = [];
+
 function addToFavorite(product){
-  if (favorites.includes(product)==false)
+  if (fav_prod.includes(product)==false)
   {
-    favorites.push(product)
+    fav_prod.push(product)
   }
-  else{
-    for (var i=0;i<favorites.length;i++){
-      if(favorites[i]==product)
-      {
-        favorites.splice(i,1)
-      }
-    }
+};
+
+/*
+addFav.addEventListener('click', event => {
+  if(addFav.checked==true){
+    addToFavorite(product);
   }
-}
+  renderProducts(currentProducts);
 
-
-
-sectionProducts.addEventListener("change",event=> {
-  for (var i =0;i<currentProducts.length;i++)
-  {
-    if (currentProducts[i].name == event.target.id)
-    {
-      addToFavorite(currentProducts[i])
-    }
-  }
-});
+})*/
